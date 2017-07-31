@@ -15,10 +15,10 @@ class TileGrid{
      *  state. A Tile can also hold an actor and items (in the future).
      */
     struct Tile{
-        const std::string name;
-        const char rep;
-        const bool walkable;
-        const Color color;
+        std::string name;
+        char rep;
+        bool walkable;
+        Color color;
 
         Tile(std::string name, char rep, bool walkable=true, Color color=WHITE)
             : name{name}, rep{rep}, walkable{walkable}, color{color} 

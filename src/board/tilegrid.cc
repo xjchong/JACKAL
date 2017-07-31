@@ -12,7 +12,7 @@ TileGrid::TileGrid(const string input, const int rows, const int cols)
                 tiles[i]=make_unique<Tile>("floor", '.');
                 break;
             case '+':
-                tiles[i]=make_unique<Tile>("door", '+');
+                tiles[i]=make_unique<Tile>("closed door", '+');
                 break;
             case '#':
                 tiles[i]=make_unique<Tile>("wall", '#', false);
