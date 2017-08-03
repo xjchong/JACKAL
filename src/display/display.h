@@ -4,14 +4,12 @@
 #include <string>
 #include <queue>
 #include <vector>
-#include <ncurses.h>
 
 class TileGrid;
 class Subject;
 
 class Display : public Observer{
 
-    WINDOW *window;
     const TileGrid &tiles;
     const int rows;
     const int cols;
@@ -19,7 +17,7 @@ class Display : public Observer{
 
 public:
 
-    Display(WINDOW *window, TileGrid &tiles, const int rows=24, const int cols=80);
+    Display(TileGrid &tiles, const int rows=21, const int cols=80);
     ~Display();
 
     void refresh();
