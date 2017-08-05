@@ -10,10 +10,11 @@ Display::Display(TileGrid &tiles, const int rows, const int cols)
     : tiles{tiles}, rows{rows}, cols{cols}
 {
     string size = "window: size="+to_string(this->cols)+"x"+to_string(this->rows)+";";
-    string title = "window.title='JACKAL';";
-    string font = "font: config/monaco.ttf, size=12;";
-    const char *options = (size+title+font).c_str();
-    terminal_set(options);
+    const char *size_c = (size).c_str();
+    terminal_set(size_c);
+    terminal_set("window.title='JACKAL'");
+    terminal_set("font: fonts/monaco.ttf, size=16x16");
+    terminal_set("0x1000: fonts/dungeon.png, size=16x16");
 }
 
 
@@ -27,7 +28,7 @@ void Display::refresh(){
             string back = tiles.getColorBack(row, col);
             char tile = tiles.getRep(row, col);
             const char *output = ("[color="+fore+"][bkcolor="+back+"]"+tile).c_str();
-            terminal_print(col, row+1, output);
+            terminal_print(col+1, row+6, output);
         }
     }
     terminal_refresh();
