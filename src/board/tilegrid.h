@@ -1,11 +1,12 @@
 #ifndef JACKAL_TILEGRID_H
 #define JACKAL_TILEGRID_H
+#include "subject.h"
 #include <memory>
 #include <vector>
 #include <string>
 
 
-class TileGrid{
+class TileGrid : public Subject{
     
     /* A Tile is a data structure that represents a single tile in the grid.
      *  It has a name, and a representation, as well as a color and a walkable

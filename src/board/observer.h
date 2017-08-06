@@ -1,5 +1,6 @@
 #ifndef JACKAL_OBSERVER_H
 #define JACKAL_OBSERVER_H
+#include <string>
 
 class Subject;
 
@@ -8,7 +9,7 @@ public:
 
     virtual ~Observer(){}
 
-    virtual void update(const Subject &subject) = 0;
+    virtual void update(const Subject &subject, std::string event) = 0;
 
 };
 

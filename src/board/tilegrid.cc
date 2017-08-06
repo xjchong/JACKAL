@@ -29,6 +29,7 @@ void TileGrid::setBoard(string input){
                 tiles[i]=make_unique<Tile>("blank", '#', false);
         }
     }
+    notify("new board");
 }
 
 

@@ -31,8 +31,15 @@ class Display : public Observer{
     const int b_col;
     std::queue<std::string> messages;
 
+    /* These are board displaying functions
+     */
+    void putFloor(const int row, const int col);
+    void putWall(const int row, const int col);
+    void putDoor(const int row, const int col);
     void refreshBoard();
 
+    /* putTerrain(row, col) displays a single terrain tile.
+     */
     void putTerrain(const int row, const int col);
 
 public:
@@ -42,7 +49,7 @@ public:
 
     void refresh();
 
-    void update(const Subject &subject) override;
+    void update(const Subject &subject, std::string event) override;
 
 };
 

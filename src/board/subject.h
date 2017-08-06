@@ -1,6 +1,7 @@
 #ifndef JACKAL_SUBJECT_H
 #define JACKAL_SUBJECT_H
 #include <vector>
+#include <string>
 
 class Observer;
 
@@ -16,7 +17,7 @@ public:
 
     void detach(Observer *observer);
 
-    void notify();
+    void notify(std::string event = "");
 
 };
 

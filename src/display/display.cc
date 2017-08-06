@@ -33,7 +33,7 @@ void Display::refresh(){
 }
 
 
-void Display::update(const Subject &subject){
+void Display::update(const Subject &subject, string event){
    return; 
 }
 
@@ -53,6 +53,18 @@ void Display::refreshBoard(){
 
 
 void Display::putTerrain(const int row, const int col){
+    char rep = tiles.getRep(row, col);
+    switch(rep){
+        case '.': return putFloor(row, col);
+        case '#': return putWall(row, col);
+        case '+': return putDoor(row, col);
+        case '\'': return putDoor(row, col);
+        default: return;
+    }
+}
+
+
+void Display::putFloor(const int row, const int col){
     TerrainReference ref;
     if (tiles.getRep(row, col) == '.'){
         terminal_layer(floor_layer);
@@ -62,7 +74,11 @@ void Display::putTerrain(const int row, const int col){
             terminal_put(col+b_col, row+b_row, ref.shadow);
         }
     }
+}
 
+
+void Display::putWall(const int row, const int col){
+    TerrainReference ref;
     if (tiles.getRep(row, col) == '#'){
         terminal_layer(wall_layer);
         if (row == tiles.rows-1 || tiles.getRep(row+1, col) != '#'){
@@ -71,35 +87,29 @@ void Display::putTerrain(const int row, const int col){
             terminal_put(col+b_col, row+b_row, ref.wall);
         }
     }
+}
 
-    if (tiles.getRep(row, col) == '+'){
-        terminal_layer(floor_layer);
-        terminal_put(col+b_col, row+b_row, ref.floor);
-        if (tiles.getRep(row-1, col) != '.' || tiles.getRep(row+1, col) != '.'){
-            if (tiles.getRep(row-1, col) == '#'){
-                terminal_layer(shadow_layer);
-                terminal_put(col+b_col, row+b_row, ref.shadow);
-            }
-            terminal_layer(door_layer);
-            terminal_put(col+b_col, row+b_row, ref.door_close_alt1);
-            terminal_layer(door_layer2);
-            terminal_put(col+b_col, (row-1)+b_row, ref.door_close_alt2);
-        } else {
-        terminal_layer(door_layer);
-            terminal_put(col+b_col, row+b_row, ref.door_close);
-        }
+
+void Display::putDoor(const int row, const int col){
+    TerrainReference ref;
+    int door = tiles.getRep(row, col) == '+'? ref.door_close : ref.door_open;
+    int door_alt1 = tiles.getRep(row, col) == '+'? ref.door_close_alt1 : ref.door_open_alt1;
+    int door_alt2 = tiles.getRep(row, col) == '+'? ref.door_close_alt2 : ref.door_open_alt2;
+
+    terminal_layer(floor_layer);
+    terminal_put(col+b_col, row+b_row, ref.floor);
+    terminal_layer(door_layer);
+    if (tiles.getRep(row, col-1) != '.' || tiles.getRep(row, col+1) != '.'){
+        terminal_put(col+b_col, row+b_row, door); 
+    } else {
+        terminal_put(col+b_col, row+b_row, door_alt1);
+        terminal_layer(door_layer2);
+        terminal_put(col+b_col, (row-1)+b_row, door_alt2);
     }
 
-    if (tiles.getRep(row, col) == '\''){
-        terminal_layer(floor_layer);
-        terminal_put(col+b_col, row+b_row, ref.floor);
-        terminal_layer(door_layer);
-        if (tiles.getRep(row-1, col) != '.' || tiles.getRep(row+1, col) != '.'){
-            terminal_put(col+b_col, row+b_row, ref.door_open_alt1);
-            terminal_layer(door_layer2);
-            terminal_put(col+b_col, (row-1)+b_row, ref.door_open_alt2);
-        } else {
-            terminal_put(col+b_col, row+b_row, ref.door_open);
-        }
+    if (tiles.getRep(row-1, col) == '#'){
+        terminal_layer(shadow_layer);
+        terminal_put(col+b_col, row+b_row, ref.shadow);
     }
+
 }
