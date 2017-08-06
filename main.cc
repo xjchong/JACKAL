@@ -3,6 +3,7 @@
 #include <streambuf>
 #include <algorithm>
 #include <BearLibTerminal.h>
+#include <memory>
 #include "src/board/tilegrid.h"
 #include "src/display/display.h"
 #include "src/board/worldgen.h"
@@ -22,13 +23,16 @@ int main(int argc, char *argv[]){
     int row = 25;
     int col = 31;
     WorldGen world{row, col};
-    TileGrid tiles{world.generate(250), row, col};
-    Display display{tiles, 30, 48};
-    display.refresh();
+    TileGrid *tiles = new TileGrid{world.generate(250), row, col};
+    Display *display = new Display{*tiles, 30, 48};
+    tiles->attach(display);
+    display->refresh();
     while (x>=0 && y>=0){
         handleInput(x, y);
-        tiles.setBoard(world.generate(250));
-        display.refresh();
+        tiles->setBoard(world.generate(250));
+        display->refresh();
     }
     terminal_close();
+    delete display;
+    delete tiles;
 }

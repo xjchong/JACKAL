@@ -5,24 +5,21 @@
 #include <queue>
 #include <vector>
 
+const int floor_ = 0x1077;
+const int wall_ = 0x1026;
+const int wall_alt_ = 0x1020;
+const int door_close_ = 0x10A0;
+const int door_open_ = 0x10A1;
+const int door_close_alt1_ = 0x10A2;
+const int door_close_alt2_ = 0x10A3;
+const int door_open_alt1_ = 0x10A5;
+const int door_open_alt2_ = 0x10A4;
+const int shadow_ = 0x10AF;
+
 class TileGrid;
 class Subject;
 
 class Display : public Observer{
-
-
-    struct TerrainReference{
-        int floor = 0x1050;
-        int wall = 0x1006;
-        int wall_alt = 0x1000;
-        int door_close = 0x10A0;
-        int door_open = 0x10A1;
-        int door_close_alt1 = 0x10A2;
-        int door_close_alt2 = 0x10A3;
-        int door_open_alt1 = 0x10A5;
-        int door_open_alt2 = 0x10A4;
-        int shadow = 0x10AF;
-    };
 
     const TileGrid &tiles;
     const int rows;
@@ -30,6 +27,7 @@ class Display : public Observer{
     const int b_row;
     const int b_col;
     std::queue<std::string> messages;
+    std::vector<int> doodad;
 
     /* These are board displaying functions
      */
@@ -49,7 +47,7 @@ public:
 
     void refresh();
 
-    void update(const Subject &subject, std::string event) override;
+    void update(Subject &subject, std::string event) override;
 
 };
 

@@ -3,14 +3,16 @@
 #include "../board/tilegrid.h"
 #include <iostream>
 #include <BearLibTerminal.h>
+#include <random>
+#include <cmath>
 using namespace std;
 
 
-static const int wall_layer = 0;
-static const int floor_layer = 0; 
-static const int door_layer = 2;
-static const int door_layer2 = 3;
-static const int shadow_layer = 1;
+static const int wall_layer = 1;
+static const int floor_layer = 1; 
+static const int door_layer = 3;
+static const int door_layer2 = 4;
+static const int shadow_layer = 2;
 
 
 Display::Display(TileGrid &tiles, const int rows, const int cols, const int b_row, const int b_col)
@@ -20,8 +22,11 @@ Display::Display(TileGrid &tiles, const int rows, const int cols, const int b_ro
     const char *size_c = (size).c_str();
     terminal_set(size_c);
     terminal_set("window.title='JACKAL'");
-    terminal_set("font: fonts/monaco.ttf, size=32x32");
+    terminal_set("font: fonts/text.ttf, size=32x32");
     terminal_set("0x1000: fonts/dungeon.png, size=16x16, resize=32x32, resize-filter=nearest");
+    doodad.resize(rows*cols);
+    update(tiles, "new board");
+    terminal_print(1, 1, "Hello World!");
 }
 
 
@@ -33,13 +38,31 @@ void Display::refresh(){
 }
 
 
-void Display::update(const Subject &subject, string event){
-   return; 
+void Display::update(Subject &subject, string event){
+   if (event == "new board"){
+       random_device rnd;
+       mt19937 mt{rnd()};
+       normal_distribution<> wall{0, 2};
+       normal_distribution<> floor{4, 2};
+       for (int row=0; row<tiles.rows; ++row){
+            for (int col=0; col<tiles.cols; ++col){
+                int serial = 0;
+                if (tiles.getRep(row, col) == '#'){
+                    serial = wall(mt);
+                    if (serial>5) serial = 5;
+                } else if (tiles.getRep(row, col) == '.'){
+                    serial = floor(mt);
+                    if (serial>7) serial = 7;
+                }
+                doodad[row*tiles.cols +col] = serial<0? 0 : serial;
+            }
+       }
+   }
 }
 
 
 void Display::refreshBoard(){
-    for (int i=0; i<=3; ++i){
+    for (int i=1; i<=4; ++i){
         terminal_layer(i);
         terminal_clear_area(b_col, b_row, tiles.cols, tiles.rows);
     }
@@ -65,39 +88,40 @@ void Display::putTerrain(const int row, const int col){
 
 
 void Display::putFloor(const int row, const int col){
-    TerrainReference ref;
     if (tiles.getRep(row, col) == '.'){
         terminal_layer(floor_layer);
-        terminal_put(col+b_col, row+b_row, ref.floor);
+        terminal_put(col+b_col, row+b_row, floor_+doodad[row*tiles.cols +col]);
         if (row>0 && (tiles.getRep(row-1, col) == '#' || tiles.getRep(row-1, col) == '+')){
             terminal_layer(shadow_layer);
-            terminal_put(col+b_col, row+b_row, ref.shadow);
+            terminal_put(col+b_col, row+b_row, shadow_);
         }
     }
 }
 
 
 void Display::putWall(const int row, const int col){
-    TerrainReference ref;
     if (tiles.getRep(row, col) == '#'){
         terminal_layer(wall_layer);
         if (row == tiles.rows-1 || tiles.getRep(row+1, col) != '#'){
-            terminal_put(col+b_col, row+b_row, ref.wall_alt);
+            terminal_put(col+b_col, row+b_row, wall_alt_+doodad[row*tiles.cols +col]);
+        } else if ((col == 0 && tiles.getRep(row, col+1) == '.')
+            || (col == tiles.cols-1  && tiles.getRep(row, col-1) == '.')
+            || (tiles.getRep(row, col-1) == '.' && tiles.getRep(row, col+1) == '.')){
+            terminal_put(col+b_col, row+b_row, wall_+doodad[row*tiles.cols + col]);
         } else {
-            terminal_put(col+b_col, row+b_row, ref.wall);
+            terminal_put(col+b_col, row+b_row, wall_);
         }
     }
 }
 
 
 void Display::putDoor(const int row, const int col){
-    TerrainReference ref;
-    int door = tiles.getRep(row, col) == '+'? ref.door_close : ref.door_open;
-    int door_alt1 = tiles.getRep(row, col) == '+'? ref.door_close_alt1 : ref.door_open_alt1;
-    int door_alt2 = tiles.getRep(row, col) == '+'? ref.door_close_alt2 : ref.door_open_alt2;
+    int door = tiles.getRep(row, col) == '+'? door_close_ : door_open_;
+    int door_alt1 = tiles.getRep(row, col) == '+'? door_close_alt1_ : door_open_alt1_;
+    int door_alt2 = tiles.getRep(row, col) == '+'? door_close_alt2_ : door_open_alt2_;
 
     terminal_layer(floor_layer);
-    terminal_put(col+b_col, row+b_row, ref.floor);
+    terminal_put(col+b_col, row+b_row, floor_);
     terminal_layer(door_layer);
     if (tiles.getRep(row, col-1) != '.' || tiles.getRep(row, col+1) != '.'){
         terminal_put(col+b_col, row+b_row, door); 
@@ -109,7 +133,7 @@ void Display::putDoor(const int row, const int col){
 
     if (tiles.getRep(row-1, col) == '#'){
         terminal_layer(shadow_layer);
-        terminal_put(col+b_col, row+b_row, ref.shadow);
+        terminal_put(col+b_col, row+b_row, shadow_);
     }
 
 }

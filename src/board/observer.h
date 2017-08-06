@@ -9,7 +9,7 @@ public:
 
     virtual ~Observer(){}
 
-    virtual void update(const Subject &subject, std::string event) = 0;
+    virtual void update(Subject &subject, std::string event) = 0;
 
 };
 
