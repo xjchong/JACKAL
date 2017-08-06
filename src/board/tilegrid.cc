@@ -6,16 +6,21 @@ TileGrid::TileGrid(const string input, const int rows, const int cols)
     : rows{rows}, cols{cols}
 {
     tiles.resize(rows*cols);
+    setBoard(input);
+}
+
+
+void TileGrid::setBoard(string input){
     for (int i=0; i<tiles.size(); ++i){
         switch(input[i]){
             case '.':
-                tiles[i]=make_unique<Tile>("floor", '.');
+                tiles[i]=make_unique<Tile>("floor", '.', true);
                 break;
             case '+':
-                tiles[i]=make_unique<Tile>("closed door", '+', false, "amber");
+                tiles[i]=make_unique<Tile>("closed door", '+', false);
                 break;
             case '\'':
-                tiles[i]=make_unique<Tile>("open door", '\'', true, "amber");
+                tiles[i]=make_unique<Tile>("open door", '\'', true);
                 break;
             case '#':
                 tiles[i]=make_unique<Tile>("wall", '#', false);
@@ -36,18 +41,6 @@ string TileGrid::getName(const int row, const int col) const{
 char TileGrid::getRep(const int row, const int col) const{
     if (row<0 || col<0 || row>rows || col>cols) return 0;
     else return tiles[row*cols + col]->rep;
-}
-
-
-string TileGrid::getColorFore(const int row, const int col) const{
-    if (row<0 || col<0 || row>rows || col>cols) return "white";
-    else return tiles[row*cols + col]->color_fore;
-}
-
-
-string TileGrid::getColorBack(const int row, const int col) const{
-    if (row<0 || col<0 || row>rows || col>cols) return "black";
-    else return tiles[row*cols + col]->color_back;
 }
 
 

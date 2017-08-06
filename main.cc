@@ -18,15 +18,16 @@ void handleInput(int &x, int &y){
 int main(int argc, char *argv[]){
     terminal_open();
     int x = 0, y = 0;
-    int row = 39;
-    int col = 47;
+    // row 39, col 47, 48x64
+    int row = 25;
+    int col = 31;
     WorldGen world{row, col};
-    string board = world.generate(250);
-    TileGrid tiles{board, row, col};
-    Display display{tiles, 48, 64};
+    TileGrid tiles{world.generate(250), row, col};
+    Display display{tiles, 30, 48};
     display.refresh();
     while (x>=0 && y>=0){
         handleInput(x, y);
+        tiles.setBoard(world.generate(250));
         display.refresh();
     }
     terminal_close();

@@ -2,16 +2,14 @@
 using namespace std;
 
 
-Actor::Actor(string name, char rep, Color color, int x, int y)
-    : name{name}, rep{rep}, color{color}, x{x}, y{y}
+Actor::Actor(string name, char rep, int x, int y)
+    : name{name}, rep{rep}, x{x}, y{y}
 {}
 
 
 string Actor::getName() const { return name; }
 
 char Actor::getRep() const { return rep; }
-
-Color Actor::getColor() const { return color; }
 
 int Actor::getX() const { return x; }
 

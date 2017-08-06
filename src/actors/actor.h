@@ -7,17 +7,15 @@
 class Actor : public Subject{
     const std::string name;
     const char rep;
-    const Color color;
     int x, y;
    
 public:
 
-   Actor(std::string name, char rep, Color color, int x=0, int y=0);
+   Actor(std::string name, char rep, int x=0, int y=0);
 
    // Accessors
    std::string getName() const;
    char getRep() const;
-   Color getColor() const;
    int getX() const;
    int getY() const;
 

@@ -4,16 +4,6 @@
 #include <vector>
 #include <string>
 
-enum Color{
-    BLACK=0,
-    RED=1,
-    GREEN=2,
-    YELLOW=3,
-    BLUE=4,
-    MAGENTA=5, 
-    CYAN=6,
-    WHITE=7
-};
 
 class TileGrid{
     
@@ -25,19 +15,11 @@ class TileGrid{
         std::string name;
         char rep;
         bool walkable;
-        std::string color_fore;
-        std::string color_back;
 
-        Tile(std::string name
-                , char rep
-                , bool walkable=true
-                , std::string color_fore="white"
-                , std::string color_back="black")
+        Tile(std::string name, char rep, bool walkable=true)
             : name{name}
             , rep{rep}
             , walkable{walkable}
-            , color_fore{color_fore}
-            , color_back{color_back}
         {}
     };
 
@@ -50,14 +32,15 @@ public:
 
     TileGrid(const std::string input, const int rows, const int cols);
 
+    // setBoard(board) resets the grid to have a new set of tiles
+    void setBoard(std::string input);
+
     // Accessors for tiles in the grid
     std::string getName(const int row, const int col) const;
     
     char getRep(const int row, const int col) const;
 
-    std::string getColorFore(const int row, const int col) const;
-
-    std::string getColorBack(const int row, const int col) const;
+    void setRep(const int row, const int col, char rep);
 
     bool isWalkable(const int row, const int col) const;
 
