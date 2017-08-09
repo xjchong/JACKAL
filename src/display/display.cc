@@ -21,17 +21,18 @@ static const int shadow_layer = 4;
 Display::Display(TileGrid &tiles, const int rows, const int cols, const int b_row, const int b_col)
     : tiles{tiles}, rows{rows}, cols{cols}, b_row{b_row}, b_col{b_col}
 {
-    string size = "window: size="+to_string(cols*2)+"x"+to_string(rows*2)+";";
-    const char *size_c = (size).c_str();
-    terminal_set(size_c);
+    terminal_setf("window: size=%dx%d", cols*2, rows*2);
     terminal_set("window.title='JACKAL'");
     terminal_set("font: fonts/header.ttf, size=16x16");
-    terminal_set("0x1000: fonts/dungeon.png, size=16x16, resize=32x32, resize-filter=nearest");
+    terminal_set("0x1000: fonts/dungeon.png, size=16x16, resize=32x32, resize-filter=nearest, align=top-left");
     terminal_set("0x2000: fonts/interface.png, size=16x16");
     doodad.resize(rows*cols);
     update(tiles, "new board");
     terminal_layer(text_layer);
-    terminal_print(2, 2, "The skeleton archer fires a poisonous arrow at you! -more-");
+    terminal_print(2, 2, "The skeleton archer fires a poisonous arrow at you!");
+    terminal_print(2, 3, "You feel sick! You swing at the skeleton archer and miss.");
+    terminal_print(2, 4, "The skeleton archer flees in terror!");
+    terminal_print(2, 5, "You feel a little better. You realize that you are invisible.");
     refreshBackground();
 }
 

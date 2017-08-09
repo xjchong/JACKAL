@@ -68,7 +68,7 @@ public:
     std::string generate(
         int room_density=750, int room_w=5, int room_h=5, 
         int room_stdev=2, int spacy=20, int doorsy=4,
-        int max_extra=2, int pillars=0);
+        int max_extra=2, int pillars=10);
 
     friend struct Connector;
 };
